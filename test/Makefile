@@ -1,10 +1,12 @@
-ANALYSIS = intra-mono-solvertest
-FILE = test.cpp
-TARGET = $(FILE:.cpp=.ll)
-CLANGPLUS = clang++
+ANALYSIS = intra-mono-fca
+CLANGPLUS = clang++ -std=c++11
+DEFAULT_TARGET = fca.ll
 
-run: $(TARGET)
-	phasar-llvm -D $(ANALYSIS) -m $(TARGET)
+all: $(DEFAULT_TARGET)
 
-$(TARGET): $(FILE)
+%.ll: %.cpp
 	$(CLANGPLUS) -S -emit-llvm $< -o $@
+	phasar-llvm -m $@ -D $(ANALYSIS)
+
+clean:
+	$(RM) *.ll
